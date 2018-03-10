@@ -14,7 +14,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		try {
-		//	if (Bukkit.getPluginManager().getPlugin("PluginConstructorAPI") == null)
+			//if (Bukkit.getPluginManager().getPlugin("PluginConstructorAPI") == null)
 				//GithubDependDownloader.autoUpdate(this, new File(getDataFolder().getParentFile(),"PluginConstructorAPI.jar"), "ZombieStriker", "PluginConstructorAPI", "PluginConstructorAPI.jar");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -26,7 +26,7 @@ public class Main extends JavaPlugin {
 		}catch(Error|Exception e){
 			
 		}
-		if(getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+		if(!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
 			Bukkit.broadcastMessage("[WorldChangeScreenRemover] ProtocolLib has not been installed. Installing now");
 			new DependencyDownloader(this, ProjectID.PROTOCOLLIB);
 		}

@@ -1,2 +1,10 @@
+1.0.2
+	//Bukkits multi-world system is extremely hacky
+	Fixed problem with Nether
+	Removeddebug messages
+
+1.0.1
+	Fixed issue with nether/end
+
 1.0.0
 	init post
