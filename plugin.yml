@@ -1,6 +1,6 @@
 main: me.zombie_striker.wcsr.Main
-version: 1.0.2
+version: 1.0.4
 name: WorldChangeScreenRemover
-softdepend: [ProtocolLib]
+softdepend: [ProtocolLib, PlaceHolderAPI]
 author:
    Zombie_Striker

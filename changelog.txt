@@ -1,3 +1,11 @@
+1.0.4
+	Fixed updater
+
+1.0.3
+	Added titles when teleporting [Optional]
+	Added PlaceHolderAPI support
+	Fixed updater
+
 1.0.2
 	//Bukkits multi-world system is extremely hacky
 	Fixed problem with Nether

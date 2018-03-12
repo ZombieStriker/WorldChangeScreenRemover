@@ -13,12 +13,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.comphenix.protocol.*;
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.wrappers.BlockPosition;
+
+import me.clip.placeholderapi.PlaceholderAPI;
 
 public class MagicPacketHolder implements Listener {
 
@@ -28,7 +29,9 @@ public class MagicPacketHolder implements Listener {
 	private HashMap<UUID, Long> lasttele = new HashMap<>();
 	private List<UUID> barredPlayers = new ArrayList<>();
 
-	public final JavaPlugin thi;
+	public static HashMap<UUID, String> from = new HashMap<>();
+
+	public final Main thi;
 
 	public PacketContainer tempp = null;
 
@@ -44,7 +47,7 @@ public class MagicPacketHolder implements Listener {
 
 	long tickCounter = 0;
 
-	public MagicPacketHolder(JavaPlugin p) {
+	public MagicPacketHolder(Main p) {
 		thi = p;
 
 		final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
@@ -173,6 +176,18 @@ public class MagicPacketHolder implements Listener {
 					barredPlayers.remove(e.getPlayer().getUniqueId());
 				else
 					playersGoingToSametype.add(e.getPlayer().getUniqueId());
+
+		if (thi.enableTitles) {
+			from.put(e.getPlayer().getUniqueId(), e.getFrom().getName());
+			try {
+				String text = PlaceholderAPI.setPlaceholders(e.getPlayer(), thi.title);
+				String subtext = PlaceholderAPI.setPlaceholders(e.getPlayer(), thi.subtitle);
+				e.getPlayer().sendTitle(text, subtext);
+
+			} catch (Error | Exception e4) {
+				e4.printStackTrace();
+			}
+		}
 
 	}
 
