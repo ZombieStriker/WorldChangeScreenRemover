@@ -6,6 +6,7 @@ import org.bukkit.plugin.Plugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.zombie_striker.wcsr.MagicPacketHolder;
 import me.zombie_striker.wcsr.Main;
+import me.zombie_striker.wcsr.mvc.MultiVerseSupporter;
 
 
 public class WCSR_PHE extends PlaceholderExpansion{
@@ -36,7 +37,7 @@ public class WCSR_PHE extends PlaceholderExpansion{
 			return MagicPacketHolder.from.get(arg0.getUniqueId());
 		}
 		if(arg1.equals("To")){
-			return arg0.getWorld().getName();
+			return MultiVerseSupporter.getAlias(arg0.getWorld());
 		}
 		return null;
 	}

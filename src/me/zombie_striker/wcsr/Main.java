@@ -1,7 +1,5 @@
 package me.zombie_striker.wcsr;
 
-import java.io.File;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,6 +12,13 @@ public class Main extends JavaPlugin {
 	public boolean enableTitles = false;
 	public String title;
 	public String subtitle;
+	
+	public double fadeInSeconds;
+	public double staySeconds;
+	public double fadeOutSeconds;
+	
+
+	public WCSR_PHE phe = null;
 
 	@Override
 	public void onEnable() {
@@ -43,22 +48,33 @@ public class Main extends JavaPlugin {
 			Bukkit.broadcastMessage("[WorldChangeScreenRemover] ProtocolLib has not been installed. Installing now");
 			new DependencyDownloader(this, ProjectID.PROTOCOLLIB);
 		}
+		updateStuff();
+		getCommand("wcsr").setExecutor(new WCSRCommand(this));
+		getServer().getPluginManager().registerEvents(new MagicPacketHolder(this), this);
+	}
 
+	public void updateStuff() {
 		enableTitles = (boolean) a("enableTitles", false);
+		
+		fadeInSeconds = (double) a ("TitleFadeIn-In-Seconds",0.5);
+		staySeconds = (double) a ("TitleStay-In-Seconds",5);
+		fadeOutSeconds = (double) a ("TitleFadeOut-In-Seconds",0.5);
+		
+		
 		title = ChatColor.translateAlternateColorCodes('&',
 				(String) a("Title", "&cYou are teleporting from world \"%WCSR_To%\""));
 		subtitle = ChatColor.translateAlternateColorCodes('&',
 				(String) a("SubTitle", "&aYou came from world \"%WCSR_From%\""));
 		if (needsSave)
 			saveConfig();
-
-		if (enableTitles)
+		
+		if (enableTitles) {
 			try {
 				new WCSR_PHE().register();
 			} catch (Exception | Error e45) {
 			}
+		}
 
-		getServer().getPluginManager().registerEvents(new MagicPacketHolder(this), this);
 	}
 
 	private boolean needsSave = false;

@@ -1,6 +1,9 @@
 main: me.zombie_striker.wcsr.Main
-version: 1.0.4
+version: 1.0.5
 name: WorldChangeScreenRemover
-softdepend: [ProtocolLib, PlaceHolderAPI]
+softdepend: [ProtocolLib, PlaceHolderAPI, Multiverse-Core]
 author:
    Zombie_Striker
+commands:
+  wcsr:
+    description: Controls the reload command

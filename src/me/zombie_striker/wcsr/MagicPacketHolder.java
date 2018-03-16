@@ -11,15 +11,14 @@ import org.bukkit.Location;
 import org.bukkit.World.Environment;
 import org.bukkit.event.*;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.comphenix.protocol.*;
 import com.comphenix.protocol.events.*;
-import com.comphenix.protocol.wrappers.BlockPosition;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.zombie_striker.wcsr.mvc.MultiVerseSupporter;
 
 public class MagicPacketHolder implements Listener {
 
@@ -178,14 +177,15 @@ public class MagicPacketHolder implements Listener {
 					playersGoingToSametype.add(e.getPlayer().getUniqueId());
 
 		if (thi.enableTitles) {
-			from.put(e.getPlayer().getUniqueId(), e.getFrom().getName());
+			from.put(e.getPlayer().getUniqueId(), MultiVerseSupporter.getAlias(e.getFrom()));
 			try {
 				String text = PlaceholderAPI.setPlaceholders(e.getPlayer(), thi.title);
 				String subtext = PlaceholderAPI.setPlaceholders(e.getPlayer(), thi.subtitle);
-				e.getPlayer().sendTitle(text, subtext);
-
+				e.getPlayer().sendTitle(text, subtext, ((int) thi.fadeInSeconds * 20), ((int) thi.staySeconds * 20),
+						((int) thi.fadeOutSeconds * 20));
 			} catch (Error | Exception e4) {
-				e4.printStackTrace();
+				e.getPlayer().sendTitle(thi.title, thi.subtitle, ((int) thi.fadeInSeconds * 20),
+						((int) thi.staySeconds * 20), ((int) thi.fadeOutSeconds * 20));
 			}
 		}
 
