@@ -1,3 +1,7 @@
+1.0.7
+	Fixed alias problem.
+	Fixed double problem
+
 1.0.6
 	Fixed updater time-out error.
 	Fixed NPE caused from missing PlaceholderAPI dependancy.

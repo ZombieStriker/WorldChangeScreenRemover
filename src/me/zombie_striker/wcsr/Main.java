@@ -57,7 +57,7 @@ public class Main extends JavaPlugin {
 		enableTitles = (boolean) a("enableTitles", false);
 		
 		fadeInSeconds = (double) a ("TitleFadeIn-In-Seconds",0.5);
-		staySeconds = (double) a ("TitleStay-In-Seconds",5);
+		staySeconds = (double) a ("TitleStay-In-Seconds",5.0);
 		fadeOutSeconds = (double) a ("TitleFadeOut-In-Seconds",0.5);
 		
 		
