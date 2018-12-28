@@ -1,11 +1,9 @@
 package me.zombie_striker.wcsr.placeholderapi;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.zombie_striker.wcsr.MagicPacketHolder;
-import me.zombie_striker.wcsr.Main;
 import me.zombie_striker.wcsr.mvc.MultiVerseSupporter;
 
 

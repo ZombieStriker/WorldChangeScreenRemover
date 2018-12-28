@@ -1,3 +1,17 @@
+1.0.11
+	Fixed error for 1.13.2
+	Rewrote packet handler. Teleporting between worlds will no longer cause tearing between the two locations.
+
+1.0.10
+	Added full 1.13 support
+
+1.0.9
+	Added support for 1.8
+
+1.0.8
+	Added support for potion effects.
+	Added support for delayed titles
+
 1.0.7
 	Fixed alias problem.
 	Fixed double problem

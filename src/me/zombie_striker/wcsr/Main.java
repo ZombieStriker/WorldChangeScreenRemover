@@ -10,13 +10,26 @@ import net.md_5.bungee.api.ChatColor;
 public class Main extends JavaPlugin {
 
 	public boolean enableTitles = false;
-	public String title;
-	public String subtitle;
 	
+	public String title;
+	public String subtitle;	
 	public double fadeInSeconds;
 	public double staySeconds;
 	public double fadeOutSeconds;
+
+	public boolean enableDelayedTitles = false;
+	public String title2;
+	public String subtitle2;	
+	public double fadeInSeconds2;
+	public double staySeconds2;
+	public double fadeOutSeconds2;
+	public int delayedTitlesdelay = 20;
 	
+	public boolean tempBlind = true;
+	public boolean tempNausea = true;
+	public boolean tempSlowness = true;
+
+	public double effectDelay;
 
 	public WCSR_PHE phe = null;
 
@@ -59,12 +72,26 @@ public class Main extends JavaPlugin {
 		fadeInSeconds = (double) a ("TitleFadeIn-In-Seconds",0.5);
 		staySeconds = (double) a ("TitleStay-In-Seconds",5.0);
 		fadeOutSeconds = (double) a ("TitleFadeOut-In-Seconds",0.5);
-		
+
+		tempNausea = (boolean) a ("addEffect-Nausea",true);
+		tempBlind = (boolean) a ("addEffect-Blindness",true);
+		tempSlowness = (boolean) a ("addEffect-Slowness",true);
+		effectDelay = (double) a ("Effect-Durration",5.0);
 		
 		title = ChatColor.translateAlternateColorCodes('&',
 				(String) a("Title", "&cYou are teleporting from world \"%WCSR_To%\""));
 		subtitle = ChatColor.translateAlternateColorCodes('&',
 				(String) a("SubTitle", "&aYou came from world \"%WCSR_From%\""));
+		
+		enableDelayedTitles = (boolean) a ("Enable-DELAYED-titles",false);
+		fadeInSeconds2 = (double) a ("DELAYED-TitleFadeIn-In-Seconds",0.5);
+		staySeconds2 = (double) a ("DELAYED-TitleStay-In-Seconds",5.0);
+		fadeOutSeconds2 = (double) a ("DELAYED-TitleFadeOut-In-Seconds",0.5);
+		title2 = ChatColor.translateAlternateColorCodes('&',
+				(String) a("DELAYED-Title", "&cThis is a delayed message"));
+		subtitle2 = ChatColor.translateAlternateColorCodes('&',
+				(String) a("DELAYED-SubTitle", "&a In case other plugins interfere with the regular titles"));
+		delayedTitlesdelay = (int) a ("DELAYED-delay-for-title-in-ticks",20);
 		if (needsSave)
 			saveConfig();
 		
