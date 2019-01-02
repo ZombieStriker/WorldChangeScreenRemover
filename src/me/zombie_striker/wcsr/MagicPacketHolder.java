@@ -155,22 +155,22 @@ public class MagicPacketHolder implements Listener {
 								lasttele.put(event.getPlayer().getUniqueId(), tickCounter);
 
 								// if (true|| getHolder(event.getPlayer().getUniqueId()) == null) {
-							//	String goingTo = null;
+								// String goingTo = null;
 								boolean overworld = false;
 								try {
 									int id = event.getPacket().getIntegers().read(0);
 									overworld = (id == 0);
-								//	goingTo = "" + id;
+									// goingTo = "" + id;
 
 								} catch (Error | Exception e45) {
 									Object o = event.getPacket().getModifier().readSafely(0);
-								//	goingTo = o.toString();
-									overworld = /*(goingTo = o.toString())*/o.toString().endsWith("overworld");
+									// goingTo = o.toString();
+									overworld = /* (goingTo = o.toString()) */o.toString().endsWith("overworld");
 								}
 								final Location previous = event.getPlayer().getLocation().clone();
 								final Environment e = previous.getWorld().getEnvironment();
-							//	Bukkit.broadcastMessage(
-							//			"going to --->" + goingTo + " (" + previous.getWorld().getName() + ")");
+								// Bukkit.broadcastMessage(
+								// "going to --->" + goingTo + " (" + previous.getWorld().getName() + ")");
 								// if (nether) {
 								/*
 								 * if ((previous.getBlock().getType().name().contains("PORTAL")) ||
@@ -182,35 +182,54 @@ public class MagicPacketHolder implements Listener {
 								 */
 								if (quickSkippers.contains(event.getPlayer().getUniqueId())) {
 									if (overworld) {
-									//	Bukkit.broadcastMessage("This is the backwards packet. Cancel it");
+										// Bukkit.broadcastMessage("This is the backwards packet. Cancel it");
 										event.setCancelled(true);
 									} else
-									//	Bukkit.broadcastMessage("quick skip skip");
-									return;
+										// Bukkit.broadcastMessage("quick skip skip");
+										return;
 								}
 
 								if (getHolder(event.getPlayer().getUniqueId()) != null) {
-									/*
-									 * PacketContainer p2 = event.getPacket();
-									 * quickSkippers.add(event.getPlayer().getUniqueId()); try {
-									 * protocolManager.sendServerPacket(event.getPlayer(),
-									 * getHolder(event.getPlayer().getUniqueId()));
-									 * protocolManager.sendServerPacket(event.getPlayer(), p2); } catch
-									 * (InvocationTargetException e1) { e1.printStackTrace(); }
-									 */
-
-								//	Bukkit.broadcastMessage("Both were going to be sent. Ignore it");
+									// Bukkit.broadcastMessage("Both were going to be sent. Ignore it");
 									setHolder(event.getPlayer().getUniqueId(), null);
 									quickSkippers.remove(event.getPlayer().getUniqueId());
+									final boolean isRaining = event.getPlayer().getWorld().isThundering();
+									new BukkitRunnable() {
+
+										@Override
+										public void run() {
+											PacketContainer pc = new PacketContainer(
+													PacketType.Play.Server.UPDATE_TIME);
+											pc.getLongs().write(0, event.getPlayer().getWorld().getFullTime());
+											pc.getLongs().write(1, event.getPlayer().getWorld().getTime());
+											try {
+												protocolManager.sendServerPacket(event.getPlayer(), pc);
+											} catch (InvocationTargetException e) {
+												e.printStackTrace();
+											}
+
+											if (isRaining != event.getPlayer().getWorld().isThundering()) {
+												PacketContainer pc2 = new PacketContainer(
+														PacketType.Play.Server.GAME_STATE_CHANGE);
+												pc2.getModifier().write(0,
+														event.getPlayer().getWorld().isThundering() ? 2 : 1);
+												try {
+													protocolManager.sendServerPacket(event.getPlayer(), pc2);
+												} catch (InvocationTargetException e) {
+													e.printStackTrace();
+												}
+											}
+										}
+									}.runTaskLater(thi, 1);
 									return;
 								}
 
 								if ((e != Environment.NORMAL)) {
-								//	Bukkit.broadcastMessage("Not normal. go");
+									// Bukkit.broadcastMessage("Not normal. go");
 									return;
 								}
 								setHolder(event.getPlayer().getUniqueId(), event.getPacket());
-								//Bukkit.broadcastMessage("canceling");
+								// Bukkit.broadcastMessage("canceling");
 								event.setCancelled(true);
 								new BukkitRunnable() {
 
@@ -218,21 +237,21 @@ public class MagicPacketHolder implements Listener {
 									public void run() {
 										if (getHolder(event.getPlayer().getUniqueId()) != null) {
 											quickSkippers.add(event.getPlayer().getUniqueId());
-										//	Bukkit.broadcastMessage("times up. Send real");
+											// Bukkit.broadcastMessage("times up. Send real");
 											try {
 												protocolManager.sendServerPacket(event.getPlayer(),
 														getHolder(event.getPlayer().getUniqueId()));
 											} catch (InvocationTargetException e1) {
 												e1.printStackTrace();
 											}
-										//	Location temp = event.getPlayer().getLocation().clone();
+											// Location temp = event.getPlayer().getLocation().clone();
 											// event.getPlayer().teleport(previous);
 											// event.getPlayer().teleport(temp);
 											quickSkippers.remove(event.getPlayer().getUniqueId());
 											setHolder(event.getPlayer().getUniqueId(), null);
 											if (temppLocations.get(event.getPlayer().getUniqueId()) != null) {
-											//	Bukkit.broadcastMessage("cc "
-											//			+ temppLocations.get(event.getPlayer().getUniqueId()).size());
+												// Bukkit.broadcastMessage("cc "
+												// + temppLocations.get(event.getPlayer().getUniqueId()).size());
 												for (int i = 0; i < temppLocations.get(event.getPlayer().getUniqueId())
 														.size(); i++) {
 													try {
