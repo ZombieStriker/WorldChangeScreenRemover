@@ -46,6 +46,7 @@ public class MagicPacketHolder implements Listener {
 
 	long tickCounter = 0;
 
+	@SuppressWarnings("deprecation")
 	public MagicPacketHolder(Main p) {
 		thi = p;
 
@@ -75,7 +76,10 @@ public class MagicPacketHolder implements Listener {
 
 		try {
 			for (PacketType pt : PacketType.values())
-				if (pt.isServer() && pt != PacketType.Play.Server.RESPAWN)
+				if (pt.isServer() && pt != PacketType.Play.Server.RESPAWN
+						&& pt != PacketType.Play.Server.SET_COMPRESSION
+						&& pt != PacketType.Play.Server.UPDATE_ENTITY_NBT
+						&& pt != PacketType.Play.Server.MAP_CHUNK_BULK)
 					protocolManager.addPacketListener(new PacketAdapter(thi, ListenerPriority.HIGHEST, pt) {
 
 						@Override

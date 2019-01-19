@@ -1,5 +1,5 @@
 main: me.zombie_striker.wcsr.Main
-version: 1.0.12
+version: 1.0.13
 api-version: 1.13
 name: WorldChangeScreenRemover
 softdepend: [ProtocolLib, PlaceHolderAPI, Multiverse-Core]
