@@ -1,3 +1,6 @@
+1.0.14
+	Fixed ping error
+
 1.0.13
 	Fixed error on startup for deprecated packets
 

@@ -3,6 +3,7 @@ package me.zombie_striker.wcsr;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World.Environment;
 import org.bukkit.event.*;
@@ -76,21 +77,31 @@ public class MagicPacketHolder implements Listener {
 
 		try {
 			for (PacketType pt : PacketType.values())
-				if (pt.isServer() && pt != PacketType.Play.Server.RESPAWN
-						&& pt != PacketType.Play.Server.SET_COMPRESSION
+				if (pt.isServer() && pt != PacketType.Play.Server.TAB_COMPLETE && pt.isServer()
+						&& pt != PacketType.Play.Server.TITLE && pt.isServer() && pt != PacketType.Play.Server.LOGIN
+						&& pt != PacketType.Play.Server.CHAT && pt.isServer()
+						&& pt != PacketType.Play.Server.KICK_DISCONNECT && pt != PacketType.Play.Server.TAGS
+						&& pt != PacketType.Status.Server.PONG && pt != PacketType.Play.Server.BLOCK_ACTION
+						&& pt != PacketType.Play.Server.PLAYER_INFO && pt != PacketType.Play.Server.WINDOW_DATA
+						&& pt != PacketType.Play.Server.WINDOW_ITEMS && pt.isServer()
+						&& pt != PacketType.Play.Server.RESPAWN && pt != PacketType.Play.Server.SET_COMPRESSION
 						&& pt != PacketType.Play.Server.UPDATE_ENTITY_NBT
-						&& pt != PacketType.Play.Server.MAP_CHUNK_BULK)
+						&& pt != PacketType.Play.Server.MAP_CHUNK_BULK) {
+					/*
+					 * if (test == 76) { Bukkit.broadcastMessage("Stopping at " + pt.name()); break;
+					 * } test++;
+					 */
 					protocolManager.addPacketListener(new PacketAdapter(thi, ListenerPriority.HIGHEST, pt) {
 
 						@Override
 						public void onPacketSending(final PacketEvent event) {
+							if (event.isCancelled())
+								return;
 							try {
 								event.getPlayer().getUniqueId();
 							} catch (Error | Exception e4) {
 								return;
 							}
-							if (event.isCancelled())
-								return;
 							if (getHolder(event.getPlayer().getUniqueId()) != null) {
 								event.setCancelled(true);
 								List<PacketContainer> cc = temppLocations.get(event.getPlayer().getUniqueId());
@@ -102,6 +113,7 @@ public class MagicPacketHolder implements Listener {
 							}
 						}
 					});
+				}
 		} catch (Error | Exception e4) {
 			e4.printStackTrace();
 		}
