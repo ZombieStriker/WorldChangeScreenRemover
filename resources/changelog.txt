@@ -1,0 +1,58 @@
+1.0.15
+	Updated to 1.14.
+	Updated to Maven
+
+1.0.14
+	Fixed ping error
+
+1.0.13
+	Fixed error on startup for deprecated packets
+
+1.0.12
+	Added support for teleporting across worlds with different times or weather.
+
+1.0.11
+	Fixed error for 1.13.2
+	Rewrote packet handler. Teleporting between worlds will no longer cause tearing between the two locations.
+
+1.0.10
+	Added full 1.13 support
+
+1.0.9
+	Added support for 1.8
+
+1.0.8
+	Added support for potion effects.
+	Added support for delayed titles
+
+1.0.7
+	Fixed alias problem.
+	Fixed double problem
+
+1.0.6
+	Fixed updater time-out error.
+	Fixed NPE caused from missing PlaceholderAPI dependancy.
+	Added support for 'fade-in', 'fade-out', and 'stay' for title
+
+1.0.5
+	Added /wcsr reload
+	Added support for aliases.
+
+1.0.4
+	Fixed updater
+
+1.0.3
+	Added titles when teleporting [Optional]
+	Added PlaceHolderAPI support
+	Fixed updater
+
+1.0.2
+	//Bukkits multi-world system is extremely hacky
+	Fixed problem with Nether
+	Removeddebug messages
+
+1.0.1
+	Fixed issue with nether/end
+
+1.0.0
+	init post

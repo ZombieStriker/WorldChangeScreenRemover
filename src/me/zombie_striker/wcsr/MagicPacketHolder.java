@@ -362,8 +362,12 @@ public class MagicPacketHolder implements Listener {
 				e.getPlayer().sendTitle(text, subtext, ((int) thi.fadeInSeconds * 20), ((int) thi.staySeconds * 20),
 						((int) thi.fadeOutSeconds * 20));
 			} catch (Error | Exception e4) {
-				e.getPlayer().sendTitle(thi.title, thi.subtitle, ((int) thi.fadeInSeconds * 20),
-						((int) thi.staySeconds * 20), ((int) thi.fadeOutSeconds * 20));
+				try {
+					e.getPlayer().sendTitle(thi.title, thi.subtitle, ((int) thi.fadeInSeconds * 20),
+							((int) thi.staySeconds * 20), ((int) thi.fadeOutSeconds * 20));
+				} catch (Error | Exception e412) {
+
+				}
 			}
 		}
 
@@ -379,9 +383,14 @@ public class MagicPacketHolder implements Listener {
 						e.getPlayer().sendTitle(text, subtext, ((int) thi.fadeInSeconds2 * 20),
 								((int) thi.staySeconds2 * 20), ((int) thi.fadeOutSeconds2 * 20));
 					} catch (Error | Exception e4) {
-						e.getPlayer().sendTitle(thi.title2, thi.subtitle2, ((int) thi.fadeInSeconds2 * 20),
-								((int) thi.staySeconds2 * 20), ((int) thi.fadeOutSeconds2 * 20));
+						try {
+							e.getPlayer().sendTitle(thi.title2, thi.subtitle2, ((int) thi.fadeInSeconds2 * 20),
+									((int) thi.staySeconds2 * 20), ((int) thi.fadeOutSeconds2 * 20));
+						} catch (Error | Exception e34) {
+
+						}
 					}
+
 				}
 
 			}.runTaskLater(thi, thi.delayedTitlesdelay);
