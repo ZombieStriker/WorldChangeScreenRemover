@@ -31,8 +31,6 @@ public class Main extends JavaPlugin {
 
 	public double effectDelay;
 
-	public WCSR_PHE phe = null;
-
 	@Override
 	public void onEnable() {
 		try {

@@ -1,51 +1,43 @@
 package me.zombie_striker.wcsr;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
-import org.bukkit.Bukkit;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.zombie_striker.wcsr.mvc.MultiVerseSupporter;
 import org.bukkit.Location;
 import org.bukkit.World.Environment;
-import org.bukkit.event.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.comphenix.protocol.*;
-import com.comphenix.protocol.events.*;
-
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.zombie_striker.wcsr.mvc.MultiVerseSupporter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class MagicPacketHolder implements Listener {
 
-	private List<UUID> respawnredPlayers = new ArrayList<>();
-	private List<UUID> playersGoingToSametype = new ArrayList<>();
-
-	private HashMap<UUID, Long> lasttele = new HashMap<>();
-	private List<UUID> barredPlayers = new ArrayList<>();
-
 	public static HashMap<UUID, String> from = new HashMap<>();
 	public static List<UUID> quickSkippers = new ArrayList<>();
-
 	public final Main thi;
-
 	public HashMap<UUID, PacketContainer> tempp = new HashMap<>();
 	public HashMap<UUID, List<PacketContainer>> temppLocations = new HashMap<>();
-
-	// boolean forceNether = false;
-
-	public final void setHolder(UUID uuid, PacketContainer p) {
-		tempp.put(uuid, p);
-	}
-
-	public final PacketContainer getHolder(UUID uuid) {
-		return tempp.get(uuid);
-	}
-
 	long tickCounter = 0;
+	private List<UUID> respawnredPlayers = new ArrayList<>();
+	private List<UUID> playersGoingToSametype = new ArrayList<>();
+	private HashMap<UUID, Long> lasttele = new HashMap<>();
+	private List<UUID> barredPlayers = new ArrayList<>();
 
 	@SuppressWarnings("deprecation")
 	public MagicPacketHolder(Main p) {
@@ -61,36 +53,16 @@ public class MagicPacketHolder implements Listener {
 
 			}
 		}.runTaskLater(thi, 1);
-		/*
-		 * for (final PacketType p2 : PacketType.values()) if (p2.isServer() &&
-		 * !p2.name().toLowerCase().contains("entity") &&
-		 * !p2.name().toLowerCase().contains("custom") &&
-		 * !p2.name().toLowerCase().contains("chunk") &&
-		 * !p2.name().toLowerCase().contains("slot"))
-		 * 
-		 * protocolManager.addPacketListener(new PacketAdapter(thi,
-		 * ListenerPriority.NORMAL, p2) {
-		 * 
-		 * @Override public void onPacketSending(final PacketEvent event) {
-		 * System.out.print(p2.name()); } });
-		 */
 
 		try {
 			for (PacketType pt : PacketType.values())
-				if (pt.isServer() && pt != PacketType.Play.Server.TAB_COMPLETE && pt.isServer()
-						&& pt != PacketType.Play.Server.TITLE && pt.isServer() && pt != PacketType.Play.Server.LOGIN
-						&& pt != PacketType.Play.Server.CHAT && pt.isServer()
-						&& pt != PacketType.Play.Server.KICK_DISCONNECT && pt != PacketType.Play.Server.TAGS
-						&& pt != PacketType.Status.Server.PONG && pt != PacketType.Play.Server.BLOCK_ACTION
-						&& pt != PacketType.Play.Server.PLAYER_INFO && pt != PacketType.Play.Server.WINDOW_DATA
-						&& pt != PacketType.Play.Server.WINDOW_ITEMS && pt.isServer()
-						&& pt != PacketType.Play.Server.RESPAWN && pt != PacketType.Play.Server.SET_COMPRESSION
-						&& pt != PacketType.Play.Server.UPDATE_ENTITY_NBT
+				if (pt.isServer() && pt.isSupported() && pt != PacketType.Play.Server.TAB_COMPLETE && pt.isServer()
+						&& pt != PacketType.Play.Server.TITLE
+						&& pt != PacketType.Play.Server.LOGIN
+						&& pt != PacketType.Play.Server.CHAT
+						&& pt != PacketType.Play.Server.RESPAWN
+						&& pt != PacketType.Play.Server.GAME_STATE_CHANGE
 						&& pt != PacketType.Play.Server.MAP_CHUNK_BULK) {
-					/*
-					 * if (test == 76) { Bukkit.broadcastMessage("Stopping at " + pt.name()); break;
-					 * } test++;
-					 */
 					protocolManager.addPacketListener(new PacketAdapter(thi, ListenerPriority.HIGHEST, pt) {
 
 						@Override
@@ -161,6 +133,7 @@ public class MagicPacketHolder implements Listener {
 										}
 									}
 								}
+
 							} else {
 								// The hack level is over 9000!
 								if (lasttele.containsKey(event.getPlayer().getUniqueId())) {
@@ -170,43 +143,25 @@ public class MagicPacketHolder implements Listener {
 								}
 								lasttele.put(event.getPlayer().getUniqueId(), tickCounter);
 
-								// if (true|| getHolder(event.getPlayer().getUniqueId()) == null) {
-								// String goingTo = null;
 								boolean overworld = false;
 								try {
 									int id = event.getPacket().getIntegers().read(0);
 									overworld = (id == 0);
-									// goingTo = "" + id;
-
 								} catch (Error | Exception e45) {
 									Object o = event.getPacket().getModifier().readSafely(0);
-									// goingTo = o.toString();
-									overworld = /* (goingTo = o.toString()) */o.toString().endsWith("overworld");
+									overworld = o.toString().endsWith("overworld");
 								}
 								final Location previous = event.getPlayer().getLocation().clone();
 								final Environment e = previous.getWorld().getEnvironment();
-								// Bukkit.broadcastMessage(
-								// "going to --->" + goingTo + " (" + previous.getWorld().getName() + ")");
-								// if (nether) {
-								/*
-								 * if ((previous.getBlock().getType().name().contains("PORTAL")) ||
-								 * (previous.getBlock().getType().name().contains("GATEWAY"))) {
-								 * Bukkit.broadcastMessage("In portal when occurs. Assume its natural.");
-								 * return; } else {
-								 * 
-								 * Bukkit.broadcastMessage("name = " + previous.getBlock().getType().name()); }
-								 */
+
 								if (quickSkippers.contains(event.getPlayer().getUniqueId())) {
 									if (overworld) {
-										// Bukkit.broadcastMessage("This is the backwards packet. Cancel it");
 										event.setCancelled(true);
 									} else
-										// Bukkit.broadcastMessage("quick skip skip");
 										return;
 								}
 
 								if (getHolder(event.getPlayer().getUniqueId()) != null) {
-									// Bukkit.broadcastMessage("Both were going to be sent. Ignore it");
 									setHolder(event.getPlayer().getUniqueId(), null);
 									quickSkippers.remove(event.getPlayer().getUniqueId());
 									final boolean isRaining = event.getPlayer().getWorld().isThundering();
@@ -241,33 +196,25 @@ public class MagicPacketHolder implements Listener {
 								}
 
 								if ((e != Environment.NORMAL)) {
-									// Bukkit.broadcastMessage("Not normal. go");
 									return;
 								}
 								setHolder(event.getPlayer().getUniqueId(), event.getPacket());
-								// Bukkit.broadcastMessage("canceling");
 								event.setCancelled(true);
 								new BukkitRunnable() {
-
 									@Override
 									public void run() {
 										if (getHolder(event.getPlayer().getUniqueId()) != null) {
 											quickSkippers.add(event.getPlayer().getUniqueId());
-											// Bukkit.broadcastMessage("times up. Send real");
 											try {
 												protocolManager.sendServerPacket(event.getPlayer(),
 														getHolder(event.getPlayer().getUniqueId()));
 											} catch (InvocationTargetException e1) {
 												e1.printStackTrace();
 											}
-											// Location temp = event.getPlayer().getLocation().clone();
-											// event.getPlayer().teleport(previous);
-											// event.getPlayer().teleport(temp);
+
 											quickSkippers.remove(event.getPlayer().getUniqueId());
 											setHolder(event.getPlayer().getUniqueId(), null);
 											if (temppLocations.get(event.getPlayer().getUniqueId()) != null) {
-												// Bukkit.broadcastMessage("cc "
-												// + temppLocations.get(event.getPlayer().getUniqueId()).size());
 												for (int i = 0; i < temppLocations.get(event.getPlayer().getUniqueId())
 														.size(); i++) {
 													try {
@@ -281,51 +228,30 @@ public class MagicPacketHolder implements Listener {
 											}
 											temppLocations.get(event.getPlayer().getUniqueId()).clear();
 											temppLocations.remove(event.getPlayer().getUniqueId());
-
-											new BukkitRunnable() {
-
-												@Override
-												public void run() {
-													// quickSkippers.remove(event.getPlayer().getUniqueId());
-												}
-											}.runTaskLater(thi, 0);
 										}
 									}
 								}.runTaskLater(thi, 0);
 							}
-
-							// nether
-							/*
-							 * new BukkitRunnable() {
-							 * 
-							 * @Override public void run() { if (getHolder(event.getPlayer().getUniqueId())
-							 * != null) { final Location temp = event.getPlayer().getLocation(); if
-							 * (temp.getWorld().getEnvironment() == Environment.NETHER) { event.getPlayer()
-							 * .teleport(Bukkit.getWorlds().get(0).getSpawnLocation()); new BukkitRunnable()
-							 * {
-							 * 
-							 * @Override public void run() { event.getPlayer().teleport(temp); }
-							 * }.runTaskLater(thi, 0); } setHolder(event.getPlayer().getUniqueId(), null); }
-							 * } }.runTaskLater(thi, 0);
-							 */
-							// }
-							/*
-							 * } else { //setHolder(event.getPlayer().getUniqueId(), null);
-							 * event.setCancelled(true); }
-							 */
-
 						}
 					}
 				});
+	}
+
+	public final void setHolder(UUID uuid, PacketContainer p) {
+		tempp.put(uuid, p);
+	}
+
+	public final PacketContainer getHolder(UUID uuid) {
+		return tempp.get(uuid);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onWorldChange(final PlayerChangedWorldEvent e) {
 		if (e.getPlayer().getWorld().getEnvironment() == e.getFrom().getEnvironment()
 				&& (!e.getFrom().getName().toLowerCase().contains("nether")
-						&& !e.getFrom().getName().toLowerCase().contains("the_end")
-						&& (!e.getPlayer().getWorld().getName().toLowerCase().contains("nether")
-								&& !e.getPlayer().getWorld().getName().toLowerCase().contains("the_end")))) {
+				&& !e.getFrom().getName().toLowerCase().contains("the_end")
+				&& (!e.getPlayer().getWorld().getName().toLowerCase().contains("nether")
+				&& !e.getPlayer().getWorld().getName().toLowerCase().contains("the_end")))) {
 			if (e.getPlayer().getWorld() != e.getFrom())
 				if (barredPlayers.contains(e.getPlayer().getUniqueId()))
 					barredPlayers.remove(e.getPlayer().getUniqueId());
