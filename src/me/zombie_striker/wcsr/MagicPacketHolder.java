@@ -110,10 +110,11 @@ public class MagicPacketHolder implements Listener {
 											.createPacket(PacketType.Play.Server.UNLOAD_CHUNK);
 									pc2.getIntegers().write(0, event.getPlayer().getLocation().getChunk().getX())
 											.write(1, event.getPlayer().getLocation().getChunk().getZ());
-
 									protocolManager.sendServerPacket(event.getPlayer(), pc2);
 								} catch (InvocationTargetException e) {
 									// e.printStackTrace();
+								} catch (IllegalArgumentException e){
+
 								}
 
 								for (int x = event.getPlayer().getLocation().getChunk().getX() - 8; x < event
@@ -130,6 +131,8 @@ public class MagicPacketHolder implements Listener {
 											protocolManager.sendServerPacket(event.getPlayer(), pc);
 										} catch (InvocationTargetException e) {
 											// e.printStackTrace();
+										} catch (IllegalArgumentException e){
+
 										}
 									}
 								}
