@@ -9,5 +9,8 @@
         <module name="WorldChangeScreenRemover" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="WorldChangeScreenRemover" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
